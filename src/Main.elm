@@ -5,6 +5,7 @@ import Html.Attributes
 import Navigation exposing (Location)
 import Rocket exposing ((=>))
 import View
+import View.Header
 import View.Debug
 import Data exposing (..)
 
@@ -46,34 +47,20 @@ handleNavigation model navigation =
       model ! [ Navigation.forward 1 ]
 
 view : Model -> Html Msg
-view { location, debugInfos } =
-  Html.div
-    [ Html.Attributes.style
-      [ "margin" => "auto"
-      , "min-width" => "700px"
-      , "max-width" => "1200px"
-      , "padding" => "12px"
-      ]
-    ]
-    [ Html.div
-      [ Html.Attributes.style
-        [ "display" => "flex"
-        , "justify-content" => "space-between"
-        , "align-items" => "center"
-        ]
-      ]
-      [ View.pagesSelector
-      , View.Debug.switch debugInfos
-      ]
-    , Html.div []
-      [ Html.h1 [] [ Html.text "Home Page" ]
-      , debugInfosPanel debugInfos location
-      ]
+view ({ location, debugInfos } as model) =
+  View.body
+    [ View.Header.header model
+    , View.activePage model
+    , debugInfosPanel debugInfos location
     ]
 
 debugInfosPanel : Bool -> Location -> Html Msg
 debugInfosPanel debugInfos location =
-  if debugInfos then
-    View.Debug.infoPanel location
-  else
-    Html.text ""
+  Html.div
+    [ Html.Attributes.style
+      [ "transition" => "max-height .4s"
+      , "overflow" => "hidden"
+      , "max-height" => if debugInfos then "600px" else "0px"
+      ]
+    ]
+    [ View.Debug.infoPanel location ]

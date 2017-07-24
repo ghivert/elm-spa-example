@@ -1,4 +1,4 @@
-module Helpers exposing (dumpLocation)
+module Helpers.LocationDumper exposing (dump)
 
 import Html exposing (Html)
 import Html.Attributes
@@ -22,8 +22,8 @@ dumpField name field =
     , colorText "#98C379" (" \"" ++ field ++ "\"\n")
     ]
 
-dumpLocation : Location -> Html msg
-dumpLocation location =
+dump : Location -> Html msg
+dump location =
   Html.div
     [ Html.Attributes.style
       [ "white-space" => "pre"

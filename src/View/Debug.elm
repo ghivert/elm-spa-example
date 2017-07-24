@@ -6,17 +6,18 @@ import Html.Events
 import Navigation exposing (Location)
 import Rocket exposing ((=>))
 import Data exposing (..)
-import Helpers
+import Helpers.LocationDumper
 
 infoPanel : Location -> Html Msg
 infoPanel location =
-  Html.div []
-    [ Html.hr
-      [ Html.Attributes.style
-        [ "margin-top" => "48px" ]
+  Html.div
+    [ Html.Attributes.style
+      [ "border" => "1px solid #dadada"
+      , "padding" => "0 24px 24px 24px"
+      , "box-sizing" => "border-box"
       ]
-      []
-    , Html.h1 []
+    ]
+    [ Html.h1 []
       [ Html.text "Debug infos" ]
     , Html.h2 []
       [ Html.text "Location object" ]
@@ -26,7 +27,7 @@ infoPanel location =
         , "padding" => "24px"
         ]
       ]
-      [ Helpers.dumpLocation location ]
+      [ Helpers.LocationDumper.dump location ]
     ]
 
 switch : Bool -> Html Msg
