@@ -21,10 +21,15 @@ main =
 
 init : Location -> (Model, Cmd Msg)
 init location =
-  { location = location
-  , route = Routing.parseLocation location
-  , debugInfos = True
-  } ! []
+  let
+    { route, params } =
+      Routing.parseLocation location
+  in
+    { location = location
+    , route = route
+    , params = params
+    , debugInfos = True
+    } ! []
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg ({ debugInfos } as model) =
@@ -38,10 +43,15 @@ handleNavigation : Model -> SpaNavigation -> (Model, Cmd Msg)
 handleNavigation model navigation =
   case navigation of
     NewLocation location ->
-      { model
-        | location = location
-        , route = Routing.parseLocation location
-      } ! []
+      let
+        { route, params } =
+          Routing.parseLocation location
+      in
+        { model
+          | location = location
+          , route = route
+          , params = params
+        } ! []
     ReloadHomePage ->
       model ! [ Navigation.newUrl "/" ]
     ChangePage url ->
@@ -65,7 +75,7 @@ debugInfosPanel ({ debugInfos, location, route } as model) =
     [ Html.Attributes.style
       [ "transition" => "max-height .4s"
       , "overflow" => "hidden"
-      , "max-height" => if debugInfos then "600px" else "0px"
+      , "max-height" => if debugInfos then "1200px" else "0px"
       ]
     ]
     [ View.Debug.infoPanel model ]

@@ -7,6 +7,7 @@ import Rocket exposing ((=>))
 import Data exposing (..)
 import Helpers.LocationDumper
 import Helpers.RouteDumper
+import Helpers.ParamsDumper
 
 infoRoute : Route -> Html msg
 infoRoute route =
@@ -14,7 +15,7 @@ infoRoute route =
     [ Html.text <| toString route ]
 
 infoPanel : Model -> Html Msg
-infoPanel { location, route } =
+infoPanel { location, route, params } =
   Html.div
     [ Html.Attributes.style
       [ "border" => "1px solid #dadada"
@@ -25,6 +26,7 @@ infoPanel { location, route } =
     [ Html.h1 [] [ Html.text "Debug infos" ]
     , debugSection "Location object" <| Helpers.LocationDumper.dump location
     , debugSection "Route object" <| Helpers.RouteDumper.dump route
+    , debugSection "Params object" <| Helpers.ParamsDumper.dump params
     ]
 
 debugSection : String -> Html msg -> Html msg

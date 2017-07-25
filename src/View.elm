@@ -17,7 +17,23 @@ body =
     ]
 
 activePage : Model -> Html Msg
-activePage model =
+activePage ({ route } as model) =
+  case route of
+    Films ->
+      notFound
+    Film id ->
+      notFound
+    Vehicles ->
+      notFound
+    Vehicle id ->
+      notFound
+    Settings ->
+      notFound
+    NotFound ->
+      notFound
+
+notFound : Html Msg
+notFound =
   Html.div []
     [ Html.h1 []
       [ Html.text "Home Page" ]

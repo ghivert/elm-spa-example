@@ -56,4 +56,4 @@ routeToString route =
     Settings ->
       colorText "#D19A66" "Settings"
     NotFound ->
-      colorText "#D19A66" "NotFountd"
+      colorText "#D19A66" "NotFound"

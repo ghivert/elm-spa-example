@@ -1,11 +1,11 @@
 module Routing exposing (parseLocation)
 
 import Navigation exposing (Location)
-import UrlParser exposing (Parser, (</>), map, top, s, int)
-import Data exposing (Route(..))
+import UrlParser exposing (Parser, (</>), (<?>), map, top, s, int)
+import Data exposing (Route(..), Params, RouteParams)
 
-matchers : Parser (Route -> a) a
-matchers =
+parseRoute : Parser (Route -> a) a
+parseRoute =
   UrlParser.oneOf
     [ map Films top
     , map Film (s "films" </> int)
@@ -15,10 +15,24 @@ matchers =
     , map Settings (s "settings")
     ]
 
-parseLocation : Location -> Route
+parseLocation : Location -> RouteParams
 parseLocation location =
-  case (UrlParser.parsePath matchers location) of
+  case (UrlParser.parsePath parseRouteParams location) of
     Just route ->
       route
     Nothing ->
-      NotFound
+      { route = NotFound
+      , params = Params Nothing Nothing
+      }
+
+parseParams : Parser (Params -> a) a
+parseParams =
+  map Params <|
+    top
+      <?> UrlParser.intParam "page"
+      <?> UrlParser.stringParam "color"
+
+parseRouteParams : Parser (RouteParams -> a) a
+parseRouteParams =
+  map RouteParams <|
+    parseRoute </> parseParams
