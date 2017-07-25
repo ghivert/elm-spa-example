@@ -17,17 +17,26 @@ infoPanel location =
       , "box-sizing" => "border-box"
       ]
     ]
-    [ Html.h1 []
-      [ Html.text "Debug infos" ]
-    , Html.h2 []
-      [ Html.text "Location object" ]
-    , Html.div
-      [ Html.Attributes.style
-        [ "background-color" => "#f8f8f8"
-        , "padding" => "24px"
+    [ Html.h1 [] [ Html.text "Debug infos" ]
+    , Html.details [ Html.Attributes.attribute "open" "" ]
+      [ Html.summary
+        [ Html.Attributes.style
+          [ "outline" => "none"
+          , "cursor" => "pointer"
+          , "font-size" => "1.5em"
+          , "font-weight" => "bold"
+          , "padding-bottom" => "12px"
+          ]
         ]
+        [ Html.text "Location object" ]
+      , Html.div
+        [ Html.Attributes.style
+          [ "background-color" => "#f8f8f8"
+          , "padding" => "24px"
+          ]
+        ]
+        [ Helpers.LocationDumper.dump location ]
       ]
-      [ Helpers.LocationDumper.dump location ]
     ]
 
 switch : Bool -> Html Msg

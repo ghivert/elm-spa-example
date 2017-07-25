@@ -18,9 +18,10 @@ main =
     , subscriptions = always Sub.none
     }
 
-init : Location -> ( Model, Cmd Msg )
+init : Location -> (Model, Cmd Msg)
 init location =
   { location = location
+  , movies = []
   , debugInfos = True
   } ! []
 
