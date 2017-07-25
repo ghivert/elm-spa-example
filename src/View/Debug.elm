@@ -6,6 +6,7 @@ import Html.Events
 import Rocket exposing ((=>))
 import Data exposing (..)
 import Helpers.LocationDumper
+import Helpers.RouteDumper
 
 infoRoute : Route -> Html msg
 infoRoute route =
@@ -22,27 +23,34 @@ infoPanel { location, route } =
       ]
     ]
     [ Html.h1 [] [ Html.text "Debug infos" ]
-    , Html.details [ Html.Attributes.attribute "open" "" ]
-      [ Html.summary
-        [ Html.Attributes.style
-          [ "outline" => "none"
-          , "cursor" => "pointer"
-          , "font-size" => "1.5em"
-          , "font-weight" => "bold"
-          , "padding-bottom" => "12px"
-          ]
-        ]
-        [ Html.text "Location object" ]
-      , Html.div
-        [ Html.Attributes.style
-          [ "background-color" => "#f8f8f8"
-          , "padding" => "24px"
-          ]
-        ]
-        [ Helpers.LocationDumper.dump location
-        , infoRoute route
+    , debugSection "Location object" <| Helpers.LocationDumper.dump location
+    , debugSection "Route object" <| Helpers.RouteDumper.dump route
+    ]
+
+debugSection : String -> Html msg -> Html msg
+debugSection label content =
+  Html.details
+    [ Html.Attributes.attribute "open" ""
+    , Html.Attributes.style
+      [ "padding-top" => "12px" ]
+    ]
+    [ Html.summary
+      [ Html.Attributes.style
+        [ "outline" => "none"
+        , "cursor" => "pointer"
+        , "font-size" => "1.5em"
+        , "font-weight" => "bold"
+        , "padding-bottom" => "12px"
         ]
       ]
+      [ Html.text label ]
+    , Html.div
+      [ Html.Attributes.style
+        [ "background-color" => "#f8f8f8"
+        , "padding" => "24px"
+        ]
+      ]
+      [ content ]
     ]
 
 switch : Bool -> Html Msg
