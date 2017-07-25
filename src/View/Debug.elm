@@ -3,13 +3,17 @@ module View.Debug exposing (..)
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
-import Navigation exposing (Location)
 import Rocket exposing ((=>))
 import Data exposing (..)
 import Helpers.LocationDumper
 
-infoPanel : Location -> Html Msg
-infoPanel location =
+infoRoute : Route -> Html msg
+infoRoute route =
+  Html.div []
+    [ Html.text <| toString route ]
+
+infoPanel : Model -> Html Msg
+infoPanel { location, route } =
   Html.div
     [ Html.Attributes.style
       [ "border" => "1px solid #dadada"
@@ -35,7 +39,9 @@ infoPanel location =
           , "padding" => "24px"
           ]
         ]
-        [ Helpers.LocationDumper.dump location ]
+        [ Helpers.LocationDumper.dump location
+        , infoRoute route
+        ]
       ]
     ]
 

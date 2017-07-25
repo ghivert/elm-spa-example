@@ -8,6 +8,7 @@ import View
 import View.Header
 import View.Debug
 import Data exposing (..)
+import Routing
 
 main : Program Never Model Msg
 main =
@@ -21,7 +22,7 @@ main =
 init : Location -> (Model, Cmd Msg)
 init location =
   { location = location
-  , movies = []
+  , route = Routing.parseLocation location
   , debugInfos = True
   } ! []
 
@@ -37,7 +38,10 @@ handleNavigation : Model -> SpaNavigation -> (Model, Cmd Msg)
 handleNavigation model navigation =
   case navigation of
     NewLocation location ->
-      { model | location = location } ! []
+      { model
+        | location = location
+        , route = Routing.parseLocation location
+      } ! []
     ReloadHomePage ->
       model ! [ Navigation.newUrl "/" ]
     ChangePage url ->
@@ -52,11 +56,11 @@ view ({ location, debugInfos } as model) =
   View.body
     [ View.Header.header model
     , View.activePage model
-    , debugInfosPanel debugInfos location
+    , debugInfosPanel model
     ]
 
-debugInfosPanel : Bool -> Location -> Html Msg
-debugInfosPanel debugInfos location =
+debugInfosPanel : Model -> Html Msg
+debugInfosPanel ({ debugInfos, location, route } as model) =
   Html.div
     [ Html.Attributes.style
       [ "transition" => "max-height .4s"
@@ -64,4 +68,4 @@ debugInfosPanel debugInfos location =
       , "max-height" => if debugInfos then "600px" else "0px"
       ]
     ]
-    [ View.Debug.infoPanel location ]
+    [ View.Debug.infoPanel model ]
