@@ -9,6 +9,7 @@ import View.Header
 import View.Debug
 import Data exposing (..)
 import Routing
+import Update.Extra as Update
 
 main : Program Never Model Msg
 main =
@@ -44,14 +45,14 @@ handleNavigation model navigation =
   case navigation of
     NewLocation location ->
       let
-        { route, params } =
+        routeParams =
           Routing.parseLocation location
       in
-        { model
-          | location = location
-          , route = route
-          , params = params
-        } ! []
+        model
+          |> setLocation location
+          |> setRouteParams routeParams
+          |> ensureCorrectParams routeParams location
+          |> Update.identity
     ReloadHomePage ->
       model ! [ Navigation.newUrl "/" ]
     ChangePage url ->

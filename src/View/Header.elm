@@ -39,8 +39,8 @@ pagesSelector =
           [ Html.Events.onClick ReloadHomePage ]
           [ Html.text "Home" ]
         , button
-          [ Html.Events.onClick <| ChangePage "/settings" ]
-          [ Html.text "Options" ]
+          [ Html.Events.onClick <| ChangePage "/foo?page=4" ]
+          [ Html.text "Settings" ]
         ]
       ]
 

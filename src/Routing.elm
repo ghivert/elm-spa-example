@@ -1,7 +1,7 @@
 module Routing exposing (parseLocation)
 
 import Navigation exposing (Location)
-import UrlParser exposing (Parser, (</>), (<?>), map, top, s, int)
+import UrlParser exposing (Parser, (</>), (<?>), map, top, s, int, string)
 import Data exposing (Route(..), Params, RouteParams)
 
 parseRoute : Parser (Route -> a) a
@@ -15,16 +15,6 @@ parseRoute =
     , map Settings (s "settings")
     ]
 
-parseLocation : Location -> RouteParams
-parseLocation location =
-  case (UrlParser.parsePath parseRouteParams location) of
-    Just route ->
-      route
-    Nothing ->
-      { route = NotFound
-      , params = Params Nothing Nothing
-      }
-
 parseParams : Parser (Params -> a) a
 parseParams =
   map Params <|
@@ -36,3 +26,13 @@ parseRouteParams : Parser (RouteParams -> a) a
 parseRouteParams =
   map RouteParams <|
     parseRoute </> parseParams
+
+parseLocation : Location -> RouteParams
+parseLocation location =
+  case (UrlParser.parsePath parseRouteParams location) of
+    Just route ->
+      route
+    Nothing ->
+      { route = NotFound
+      , params = Params Nothing Nothing
+      }

@@ -1,6 +1,8 @@
 module Data exposing (..)
 
 import Navigation exposing (Location)
+import RouteParser.QueryString as Queries
+import Params exposing (Params, toParams)
 
 type SpaNavigation
   = NewLocation Location
@@ -8,11 +10,6 @@ type SpaNavigation
   | ChangePage String
   | BackPage
   | ForwardPage
-
-type alias Params =
-  { page : Maybe Int
-  , color : Maybe String
-  }
 
 type Route
   = Films
@@ -37,3 +34,36 @@ type alias Model =
   , params : Params
   , debugInfos : Bool
   }
+
+setLocation : Location -> Model -> Model
+setLocation location model =
+  { model | location = location }
+
+setRoute : Route -> Model -> Model
+setRoute route model =
+  { model | route = route }
+
+setParams : Params -> Model -> Model
+setParams params model =
+  { model | params = params }
+
+asParamsIn : Model -> Params -> Model
+asParamsIn model params =
+  { model | params = params }
+
+setRouteParams : RouteParams -> Model -> Model
+setRouteParams { route, params } model =
+  model
+    |> setRoute route
+    |> setParams params
+
+ensureCorrectParams : RouteParams -> Location -> Model -> Model
+ensureCorrectParams { route, params } { search } model =
+  case route of
+    NotFound ->
+      search
+        |> Queries.parse
+        |> toParams
+        |> asParamsIn model
+    _ ->
+      model
