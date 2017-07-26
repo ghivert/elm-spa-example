@@ -1,8 +1,7 @@
 module Data exposing (..)
 
 import Navigation exposing (Location)
-import RouteParser.QueryString as Queries
-import Params exposing (Params, toParams)
+import Params exposing (Params)
 
 type SpaNavigation
   = NewLocation Location
@@ -18,11 +17,6 @@ type Route
   | Vehicle Int
   | Settings
   | NotFound
-
-type alias RouteParams =
-  { route : Route
-  , params : Params
-  }
 
 type Msg
   = Navigation SpaNavigation
@@ -50,20 +44,3 @@ setParams params model =
 asParamsIn : Model -> Params -> Model
 asParamsIn model params =
   { model | params = params }
-
-setRouteParams : RouteParams -> Model -> Model
-setRouteParams { route, params } model =
-  model
-    |> setRoute route
-    |> setParams params
-
-ensureCorrectParams : RouteParams -> Location -> Model -> Model
-ensureCorrectParams { route, params } { search } model =
-  case route of
-    NotFound ->
-      search
-        |> Queries.parse
-        |> toParams
-        |> asParamsIn model
-    _ ->
-      model

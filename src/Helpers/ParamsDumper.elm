@@ -2,8 +2,8 @@ module Helpers.ParamsDumper exposing (..)
 
 import Html exposing (Html)
 import Html.Attributes
-import Data exposing (Params)
 import Rocket exposing ((=>))
+import Params exposing (Params)
 
 colorText : String -> String -> Html msg
 colorText color_ text_ =

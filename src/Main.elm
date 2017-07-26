@@ -10,6 +10,7 @@ import View.Debug
 import Data exposing (..)
 import Routing
 import Update.Extra as Update
+import Params
 
 main : Program Never Model Msg
 main =
@@ -22,15 +23,11 @@ main =
 
 init : Location -> (Model, Cmd Msg)
 init location =
-  let
-    { route, params } =
-      Routing.parseLocation location
-  in
-    { location = location
-    , route = route
-    , params = params
-    , debugInfos = True
-    } ! []
+  { location = location
+  , route = Routing.parseLocation location
+  , params = Params.fromQueryString location.search
+  , debugInfos = True
+  } ! []
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg ({ debugInfos } as model) =
@@ -44,15 +41,11 @@ handleNavigation : Model -> SpaNavigation -> (Model, Cmd Msg)
 handleNavigation model navigation =
   case navigation of
     NewLocation location ->
-      let
-        routeParams =
-          Routing.parseLocation location
-      in
-        model
-          |> setLocation location
-          |> setRouteParams routeParams
-          |> ensureCorrectParams routeParams location
-          |> Update.identity
+      model
+        |> setLocation location
+        |> setRoute (Routing.parseLocation location)
+        |> setParams (Params.fromQueryString location.search)
+        |> Update.identity
     ReloadHomePage ->
       model ! [ Navigation.newUrl "/" ]
     ChangePage url ->
