@@ -5,9 +5,9 @@ import Html.Attributes
 import Html.Events
 import Rocket exposing ((=>))
 import Data exposing (..)
-import Helpers.LocationDumper
-import Helpers.RouteDumper
-import Helpers.ParamsDumper
+import Params exposing (Params)
+import Navigation exposing (Location)
+import Data.Dumper as Dumper
 
 infoRoute : Route -> Html msg
 infoRoute route =
@@ -24,9 +24,9 @@ infoPanel { location, route, params } =
       ]
     ]
     [ Html.h1 [] [ Html.text "Debug infos" ]
-    , debugSection "Location object" <| Helpers.LocationDumper.dump location
-    , debugSection "Route object" <| Helpers.RouteDumper.dump route
-    , debugSection "Params object" <| Helpers.ParamsDumper.dump params
+    , debugSection "Location object" <| dumpLocation location
+    , debugSection "Route object" <| dumpRoute route
+    , debugSection "Params object" <| dumpParams params
     ]
 
 debugSection : String -> Html msg -> Html msg
@@ -46,13 +46,7 @@ debugSection label content =
         ]
       ]
       [ Html.text label ]
-    , Html.div
-      [ Html.Attributes.style
-        [ "background-color" => "#f8f8f8"
-        , "padding" => "24px"
-        ]
-      ]
-      [ content ]
+    , content
     ]
 
 switch : Bool -> Html Msg
@@ -102,3 +96,47 @@ switch debugInfos =
         []
       ]
     ]
+
+
+-- Dumpers
+dumpLocation : Location -> Html msg
+dumpLocation =
+  Dumper.dumpRecord "Location"
+    [ "href"     => .href     >> Dumper.dumpString
+    , "host"     => .host     >> Dumper.dumpString
+    , "hostname" => .hostname >> Dumper.dumpString
+    , "protocol" => .protocol >> Dumper.dumpString
+    , "origin"   => .origin   >> Dumper.dumpString
+    , "port_"    => .port_    >> Dumper.dumpString
+    , "pathname" => .pathname >> Dumper.dumpString
+    , "search"   => .search   >> Dumper.dumpString
+    , "hash"     => .hash     >> Dumper.dumpString
+    ]
+
+dumpParams : Params -> Html msg
+dumpParams =
+  Dumper.dumpRecord "Params"
+    [ "page " => .page  >> Dumper.dumpMaybe Dumper.dumpInt
+    , "color" => .color >> Dumper.dumpMaybe Dumper.dumpColor
+    ]
+
+dumpRoute : Route -> Html msg
+dumpRoute =
+  Dumper.dumpUnion "Route" <<
+    routeDumper
+
+routeDumper : Route -> (String, Html msg)
+routeDumper route =
+  case route of
+    Films ->
+      "Films" => Html.text ""
+    Film id ->
+      "Film" => Dumper.dumpInt id
+    Vehicles ->
+      "Vehicles" => Html.text ""
+    Vehicle id ->
+      "Vehicle" => Dumper.dumpInt id
+    Settings ->
+      "Settings" => Html.text ""
+    NotFound ->
+      "NotFound" => Html.text ""
