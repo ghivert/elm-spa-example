@@ -2,7 +2,7 @@
     "version": "1.0.0",
     "summary": "Provides an example of SPA in Elm using elm-navigation.",
     "repository": "https://github.com/ghivert/elm-spa-example.git",
-    "license": "BSD3",
+    "license": "MIT",
     "source-directories": [
         "src"
     ],
